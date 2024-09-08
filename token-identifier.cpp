@@ -3,27 +3,28 @@
 #include <vector>
 #include <cctype>
 #include <unordered_set>
+#include <fstream>
 using namespace std;
 
-unordered_set<string> keywords={"int", "float", "if", "else", "while", "for", "return"};
+unordered_set<string> keywords = {"int", "float", "if", "else", "while", "for", "return"};
 unordered_set<char> operators = {'+', '-', '*', '/', '=', '<', '>', '!', '&', '|', '^', '%', '~', '?', ':'};
 
-bool isKeyword(const string &str){
-    return keywords.find(str)!=keywords.end();
+bool isKeyword(const string &str) {
+    return keywords.find(str) != keywords.end();
 }
 
 bool isOperator(char ch) {
     return operators.find(ch) != operators.end();
 }
 
-bool isNumber(const string& str){
-    for(char ch:str){
-        if(!isdigit(ch)) return false;
+bool isNumber(const string &str) {
+    for (char ch : str) {
+        if (!isdigit(ch)) return false;
     }
     return true;
 }
 
-bool isIdentifier(const string& str){
+bool isIdentifier(const string &str) {
     if (str.empty() || !isalpha(str[0])) return false;
     for (char ch : str) {
         if (!isalnum(ch) && ch != '_') return false;
@@ -31,10 +32,10 @@ bool isIdentifier(const string& str){
     return true;
 }
 
-void identifyTokens(const string& statement) {
+void identifyTokens(const string &statement) {
     vector<string> tokens;
     string token;
-    
+
     for (char ch : statement) {
         if (isspace(ch) || isOperator(ch) || ch == ';' || ch == '(' || ch == ')') {
             if (!token.empty()) {
@@ -52,7 +53,7 @@ void identifyTokens(const string& statement) {
         tokens.push_back(token);
     }
 
-    for (const string& tok : tokens) {
+    for (const string &tok : tokens) {
         if (isKeyword(tok)) {
             cout << tok << " is a keyword" << endl;
         } else if (isNumber(tok)) {
@@ -68,9 +69,17 @@ void identifyTokens(const string& statement) {
 }
 
 int main() {
-    string statement;
-    cout << "Enter a statement: ";
-    getline(cin, statement);
-    identifyTokens(statement);
+    ifstream inputFile("input.txt");
+    if (!inputFile.is_open()) {
+        cerr << "Error opening file" << endl;
+        return 1;
+    }
+
+    string line;
+    while (getline(inputFile, line)) {
+        identifyTokens(line);
+    }
+
+    inputFile.close();
     return 0;
 }
