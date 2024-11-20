@@ -4,8 +4,8 @@
 using namespace std;
 
 void terminateOnInvalidGrammar() {
-    cout << "Not operator grammar" << endl;
-    exit(0);
+    cout << "Invalid grammar" << endl;
+    exit(1);
 }
 
 int main() {
@@ -32,7 +32,14 @@ int main() {
             if (currentChar == '+' || currentChar == '-' || currentChar == '*' || currentChar == '/' || currentChar == '(' || currentChar == ')') {
                 continue;
             } else if (isupper(currentChar) || islower(currentChar)) {
+                if (j + 1 < prod.size() && (isupper(prod[j + 1]) || islower(prod[j + 1]))) {
+                    valid = false;
+                    break;
+                }
                 continue;
+            } else if (currentChar == '#') {
+                valid = false;
+                break;
             } else {
                 valid = false;
                 break;
@@ -44,6 +51,5 @@ int main() {
     }
 
     cout << "Operator grammar" << endl;
-
     return 0;
 }
